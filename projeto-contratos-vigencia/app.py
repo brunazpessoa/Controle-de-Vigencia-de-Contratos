@@ -87,6 +87,7 @@ fig_qtd = px.bar(
 
 fig_qtd.update_layout(
     height=500,  # altura ideal para 10 itens
+    width=500,
     yaxis=dict(tickfont=dict(size=12)),  # tamanho da fonte nos fornecedores
     xaxis=dict(title='Quantidade'),
     margin=dict(l=120, r=20, t=60, b=40),  # margem esquerda maior para nomes
@@ -96,7 +97,7 @@ fig_qtd.update_layout(
 fig_qtd.update_traces(
     text=top_qtd.sort_values().values,
     textposition='auto',
-    textfont=dict(size=14)
+    textfont=dict(size=12)
 )
 
 st.plotly_chart(fig_qtd, use_container_width=True)
