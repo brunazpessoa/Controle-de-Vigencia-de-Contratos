@@ -70,26 +70,44 @@ fig.update_layout(xaxis_tickangle=0, yaxis_tickprefix="R$ ", yaxis_tickformat=",
 fig.update_traces(texttemplate='R$ %{text:,.2f}', textposition='auto', textfont=dict(size=14))
 st.plotly_chart(fig, use_container_width=True)
 
-# VISÃO 4
+# --- VISÃO 4: Top 10 fornecedores com contratos ativos ---
 st.subheader("🏆 Top 10 fornecedores com contratos em andamento")
+
+# Filtro de contratos em andamento
 ativos = df[df['status_vigencia'] == 'Em andamento']
 
-col1, col2 = st.columns(2)
-
+# Top 10 por quantidade de contratos
 top_qtd = ativos['contratado'].value_counts().head(10)
-fig_qtd = px.bar(top_qtd.sort_values(), orientation='h', title='📌 Por quantidade de contratos',
-                 labels={'value': 'Quantidade', 'index': 'Fornecedor'})
-col1.plotly_chart(fig_qtd, use_container_width=True)
 
+# Layout com colunas (barra à esquerda menor, pizza mais ampla)
+col1, _ = st.columns([1, 2])  # a segunda coluna não será usada
+
+with col1:
+    fig_qtd = px.bar(
+        top_qtd.sort_values(),
+        orientation='h',
+        title='📌 Por quantidade de contratos',
+        labels={'value': 'Quantidade', 'index': 'Fornecedor'}
+    )
+    st.plotly_chart(fig_qtd, use_container_width=True)
+
+# Top 10 por valor
 top_valor = ativos.groupby('contratado')['valor_global_acumulado'].sum().sort_values(ascending=False).head(10)
 top_valor_df = top_valor.reset_index()
 top_valor_df.columns = ['fornecedor', 'valor']
-fig_valor = px.pie(top_valor_df, names='fornecedor', values='valor',
-                   title='💰 Distribuição percentual por valor acumulado - Top 10 fornecedores')
-fig_valor.update_traces(textposition='inside', textinfo='percent')
-fig_valor.update_layout(font=dict(size=12))
-col2.plotly_chart(fig_valor, use_container_width=True)
 
+fig_valor = px.pie(
+    top_valor_df,
+    names='fornecedor',
+    values='valor',
+    title='💰 Distribuição percentual por valor acumulado - Top 10 fornecedores',
+)
+
+fig_valor.update_traces(textposition='inside', textinfo='percent')
+fig_valor.update_layout(font=dict(size=12), width=700, height=500)  # ajuste de tamanho
+
+# Exibe o gráfico de pizza fora das colunas, usando largura total
+st.plotly_chart(fig_valor, use_container_width=True)
 # Rodapé
 st.markdown("---")
 st.caption('Base: https://dados.gov.br/dados/conjuntos-dados/compras-contratos-administrativos1')
