@@ -71,10 +71,11 @@ fig.update_traces(texttemplate='R$ %{text:,.2f}', textposition='auto', textfont=
 st.plotly_chart(fig, use_container_width=True)
 
 # --- VISÃO 4: Top 10 fornecedores com contratos ativos ---
-# Top 10 fornecedores por quantidade de contratos em andamento
 st.subheader("🏆 Top 10 fornecedores com contratos em andamento")
 
 ativos = df[df['status_vigencia'] == 'Em andamento']
+
+# --- Por quantidade de contratos ---
 top_qtd = ativos['contratado'].value_counts().head(10)
 
 fig_qtd = px.bar(
@@ -82,16 +83,16 @@ fig_qtd = px.bar(
     orientation='h',
     title='📌 Por quantidade de contratos',
     labels={'value': 'Quantidade', 'index': 'Fornecedor'},
-    color_discrete_sequence=['#6ecdf2']  # cor personalizada opcional
+    color_discrete_sequence=['#6ecdf2']
 )
 
 fig_qtd.update_layout(
-    height=500,  # altura ideal para 10 itens
+    height=500,
     width=500,
-    yaxis=dict(tickfont=dict(size=12)),  # tamanho da fonte nos fornecedores
+    yaxis=dict(tickfont=dict(size=12)),
     xaxis=dict(title='Quantidade'),
-    margin=dict(l=120, r=20, t=60, b=40),  # margem esquerda maior para nomes
-    showlegend=False  # remove legenda desnecessária
+    margin=dict(l=120, r=20, t=60, b=40),
+    showlegend=False
 )
 
 fig_qtd.update_traces(
@@ -102,17 +103,17 @@ fig_qtd.update_traces(
 
 st.plotly_chart(fig_qtd, use_container_width=True)
 
-# gráfico de pizza
+# --- Por valor acumulado ---
 top_valor = ativos.groupby('contratado')['valor_global_acumulado'].sum().sort_values(ascending=False).head(10)
+top_valor_df = top_valor.reset_index()
 top_valor_df.columns = ['fornecedor', 'valor']
 
-# Ordenar por valor
+# Ordenar do menor para o maior para visual melhor em barras horizontais
 top_valor_df = top_valor_df.sort_values(by='valor', ascending=True)
 
-# Cores: top 3 com destaque, os outros em cinza
+# Cores: top 3 com destaque, os demais em cinza
 cores = ['#1f77b4', '#ff7f0e', '#2ca02c'] + ['lightgray'] * (len(top_valor_df) - 3)
 
-# Gráfico de barras horizontais
 fig_valor = px.bar(
     top_valor_df,
     x='valor',
@@ -139,7 +140,6 @@ fig_valor.update_layout(
 )
 
 st.plotly_chart(fig_valor, use_container_width=True)
-
 
 # Rodapé
 st.markdown("---")
