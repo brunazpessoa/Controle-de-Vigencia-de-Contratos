@@ -8,7 +8,9 @@ import plotly.express as px
 
 # Carregando base fixa (arquivo deve estar dentro da pasta /projeto-contratos-vigencia)
 try:
-    df = pd.read_excel("https://github.com/brunazpessoa/Controle-de-Vigencia-de-Contratos/blob/main/projeto-contratos-vigencia/compras-contratos-administrativos.xlsx)  # ou ajuste o caminho conforme seu repositório
+    df = pd.read_excel(
+    "https://raw.githubusercontent.com/brunazpessoa/Controle-de-Vigencia-de-Contratos/main/projeto-contratos-vigencia/compras-contratos-administrativos.xlsx)
+ # ou ajuste o caminho conforme repositório
     st.success("Base carregada com sucesso!")
 except FileNotFoundError:
     st.error("⚠️ Arquivo não encontrado. Verifique se o arquivo .xlsx está na pasta correta.")
