@@ -6,10 +6,10 @@ import plotly.express as px
 
 # 1. Upload dos dados ------------------------------------------------------------------------------------------------------------------------------
 
-arquivo = 'compras-contratos-administrativos.xlsx'
+arquivo = st.file_uploader("Envie o arquivo .xlsx com os contratos administrativos", type="xlsx")
 if arquivo is not None:
-    df = pd.read_excel(arquivo) # armazenando o arquivo em um dataframe  
-
+    df = pd.read_excel(arquivo) #salvando o arquivo em um dataframe
+    
 # 2. Tratamento dos dados ------------------------------------------------------------------------------------------------------------------------------
 
     #convertendo as colunas de data para "datetime"
