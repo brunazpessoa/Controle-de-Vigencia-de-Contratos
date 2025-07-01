@@ -96,6 +96,7 @@ top_valor = ativos.groupby('contratado')['valor_global_acumulado'].sum().sort_va
 top_valor_df = top_valor.reset_index()
 top_valor_df.columns = ['fornecedor', 'valor']
 
+# Gráfico de pizza - legenda horizontal (mobile-friendly)
 fig_valor = px.pie(
     top_valor_df,
     names='fornecedor',
@@ -103,8 +104,27 @@ fig_valor = px.pie(
     title='💰 Distribuição percentual por valor acumulado - Top 10 fornecedores',
 )
 
-fig_valor.update_traces(textposition='inside', textinfo='percent')
-fig_valor.update_layout(font=dict(size=12), width=700, height=500)  # ajuste de tamanho
+fig_valor.update_traces(
+    textposition='inside',
+    textinfo='percent+label'
+)
+
+fig_valor.update_layout(
+    legend=dict(
+        orientation="h",  # horizontal
+        yanchor="bottom",
+        y=1.1,            # um pouco acima do gráfico
+        xanchor="center",
+        x=0.5,
+        font=dict(size=10)
+    ),
+    margin=dict(t=100),  # margem superior para legenda
+    height=600,
+    font=dict(size=12)
+)
+
+st.plotly_chart(fig_valor, use_container_width=True)
+
 
 # Exibe o gráfico de pizza fora das colunas, usando largura total
 st.plotly_chart(fig_valor, use_container_width=True)
