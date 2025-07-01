@@ -71,25 +71,35 @@ fig.update_traces(texttemplate='R$ %{text:,.2f}', textposition='auto', textfont=
 st.plotly_chart(fig, use_container_width=True)
 
 # --- VISÃO 4: Top 10 fornecedores com contratos ativos ---
+# Top 10 fornecedores por quantidade de contratos em andamento
 st.subheader("🏆 Top 10 fornecedores com contratos em andamento")
 
-# Filtro de contratos em andamento
 ativos = df[df['status_vigencia'] == 'Em andamento']
-
-# Top 10 por quantidade de contratos
 top_qtd = ativos['contratado'].value_counts().head(10)
 
-# Layout com colunas (barra à esquerda menor, pizza mais ampla)
-col1, _ = st.columns([1, 2])  # a segunda coluna não será usada
+fig_qtd = px.bar(
+    top_qtd.sort_values(),
+    orientation='h',
+    title='📌 Por quantidade de contratos',
+    labels={'value': 'Quantidade', 'index': 'Fornecedor'},
+    color_discrete_sequence=['#6ecdf2']  # cor personalizada opcional
+)
 
-with col1:
-    fig_qtd = px.bar(
-        top_qtd.sort_values(),
-        orientation='h',
-        title='📌 Por quantidade de contratos',
-        labels={'value': 'Quantidade', 'index': 'Fornecedor'}
-    )
-    st.plotly_chart(fig_qtd, use_container_width=True)
+fig_qtd.update_layout(
+    height=500,  # altura ideal para 10 itens
+    yaxis=dict(tickfont=dict(size=12)),  # tamanho da fonte nos fornecedores
+    xaxis=dict(title='Quantidade'),
+    margin=dict(l=120, r=20, t=60, b=40),  # margem esquerda maior para nomes
+    showlegend=False  # remove legenda desnecessária
+)
+
+fig_qtd.update_traces(
+    text=top_qtd.sort_values().values,
+    textposition='auto',
+    textfont=dict(size=14)
+)
+
+st.plotly_chart(fig_qtd, use_container_width=True)
 
 # gráfico de pizza
 top_valor = ativos.groupby('contratado')['valor_global_acumulado'].sum().sort_values(ascending=False).head(10)
