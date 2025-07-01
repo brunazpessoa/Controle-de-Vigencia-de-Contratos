@@ -178,5 +178,5 @@ if arquivo is not None:
     st.markdown("---")
     st.caption('Base de Dados utilizada: https://dados.gov.br/dados/conjuntos-dados/compras-contratos-administrativos1 ')
     st.caption('Desenvolvido por Bruna Zakaib Pessoa.')
-    st.caption('Código completo: ')
+    st.caption('Código completo: https://github.com/brunazpessoa/Controle-de-Vigencia-de-Contratos')
     
