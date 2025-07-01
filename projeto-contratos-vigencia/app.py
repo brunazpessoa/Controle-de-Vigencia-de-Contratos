@@ -103,16 +103,18 @@ fig_qtd.update_traces(
 
 st.plotly_chart(fig_qtd, use_container_width=True)
 
-# --- Por valor acumulado ---
+# Top 10 fornecedores por valor acumulado
 top_valor = ativos.groupby('contratado')['valor_global_acumulado'].sum().sort_values(ascending=False).head(10)
 top_valor_df = top_valor.reset_index()
 top_valor_df.columns = ['fornecedor', 'valor']
 
-# Ordenar do menor para o maior para visual melhor em barras horizontais
-top_valor_df = top_valor_df.sort_values(by='valor', ascending=True)
+# Destacar os 3 maiores
+cores_destaque = ['#1f77b4', '#1f77b4', '#1f77b4']  # azul
+cores = cores_destaque + ['lightgray'] * (len(top_valor_df) - 3)
 
-# Cores: top 3 com destaque, os demais em cinza
-cores = ['#1f77b4', '#ff7f0e', '#2ca02c'] + ['lightgray'] * (len(top_valor_df) - 3)
+# Ordenar por valor (menor para maior) apenas para visualização horizontal
+top_valor_df['cor'] = cores
+top_valor_df = top_valor_df.sort_values(by='valor', ascending=True)
 
 fig_valor = px.bar(
     top_valor_df,
@@ -122,13 +124,15 @@ fig_valor = px.bar(
     title='💰 Valor acumulado - Top 10 fornecedores',
     text='valor',
     labels={'valor': 'Valor acumulado (R$)', 'fornecedor': 'Fornecedor'},
+    color='cor',  # usa a coluna cor
+    color_discrete_map='identity'  # aceita as cores exatas da lista
 )
 
 fig_valor.update_traces(
-    marker_color=cores,
     texttemplate='R$ %{text:,.2f}',
     textposition='auto',
-    textfont=dict(size=12)
+    textfont=dict(size=12),
+    showlegend=False  # remove legenda de cores
 )
 
 fig_valor.update_layout(
@@ -137,9 +141,11 @@ fig_valor.update_layout(
     xaxis_tickformat=",",
     margin=dict(l=150, r=40, t=60, b=40),
     height=500,
+    showlegend=False  # reforço para remover legenda
 )
 
 st.plotly_chart(fig_valor, use_container_width=True)
+
 
 # Rodapé
 st.markdown("---")
