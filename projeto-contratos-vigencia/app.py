@@ -104,34 +104,42 @@ st.plotly_chart(fig_qtd, use_container_width=True)
 
 # gráfico de pizza
 top_valor = ativos.groupby('contratado')['valor_global_acumulado'].sum().sort_values(ascending=False).head(10)
-top_valor_df = top_valor.reset_index()
 top_valor_df.columns = ['fornecedor', 'valor']
 
-fig_valor = px.pie(
+# Ordenar por valor
+top_valor_df = top_valor_df.sort_values(by='valor', ascending=True)
+
+# Cores: top 3 com destaque, os outros em cinza
+cores = ['#1f77b4', '#ff7f0e', '#2ca02c'] + ['lightgray'] * (len(top_valor_df) - 3)
+
+# Gráfico de barras horizontais
+fig_valor = px.bar(
     top_valor_df,
-    names='fornecedor',
-    values='valor',
-    title='💰 Distribuição percentual por valor acumulado - Top 10 fornecedores',
+    x='valor',
+    y='fornecedor',
+    orientation='h',
+    title='💰 Valor acumulado - Top 10 fornecedores',
+    text='valor',
+    labels={'valor': 'Valor acumulado (R$)', 'fornecedor': 'Fornecedor'},
 )
 
 fig_valor.update_traces(
-    textposition='inside',
-    textinfo='percent+label'
+    marker_color=cores,
+    texttemplate='R$ %{text:,.2f}',
+    textposition='auto',
+    textfont=dict(size=12)
 )
 
 fig_valor.update_layout(
-    legend=dict(
-        orientation="v",     # vertical
-        x=1.05,              # fora do gráfico
-        y=0.5,
-        font=dict(size=10)
-    ),
-    margin=dict(r=200),      # margem direita para espaço da legenda
+    yaxis=dict(tickfont=dict(size=11)),
+    xaxis_tickprefix="R$ ",
+    xaxis_tickformat=",",
+    margin=dict(l=150, r=40, t=60, b=40),
     height=500,
-    font=dict(size=12)       # tamanho base da fonte
 )
 
 st.plotly_chart(fig_valor, use_container_width=True)
+
 
 # Rodapé
 st.markdown("---")
