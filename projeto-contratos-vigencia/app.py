@@ -6,14 +6,10 @@ import plotly.express as px
 
 # 1. Upload dos dados ------------------------------------------------------------------------------------------------------------------------------
 
-url_base = "https://raw.githubusercontent.com/brunazpessoa/Controle-de-Vigencia-de-Contratos/main/projeto-contratos-vigencia/compras-contratos-administrativos.xlsx"
+    url_base = "https://raw.githubusercontent.com/brunazpessoa/Controle-de-Vigencia-de-Contratos/main/projeto-contratos-vigencia/compras-contratos-administrativos.xlsx"
 
-try:
     df = pd.read_excel(url_base)
-    st.success("✅ Base carregada com sucesso!")
-except Exception as e:
-    st.error("⚠️ Erro ao carregar a base de dados. Verifique o link ou a disponibilidade do arquivo.")
-    st.stop()
+    st.success("Base carregada com sucesso!")
     
 # 2. Tratamento dos dados ------------------------------------------------------------------------------------------------------------------------------
 
