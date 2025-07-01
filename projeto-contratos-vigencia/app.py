@@ -6,9 +6,12 @@ import plotly.express as px
 
 # 1. Upload dos dados ------------------------------------------------------------------------------------------------------------------------------
 
-arquivo = st.file_uploader("Envie o arquivo .xlsx com os contratos administrativos", type="xlsx")
-if arquivo is not None:
-    df = pd.read_excel(arquivo) #salvando o arquivo em um dataframe
+# Carregando base fixa (arquivo deve estar dentro da pasta /projeto-contratos-vigencia)
+try:
+    df = pd.read_excel("compras-contratos-administrativos.xlsx")  # ou ajuste o caminho conforme seu repositório
+    st.success("Base carregada com sucesso!")
+except FileNotFoundError:
+    st.error("⚠️ Arquivo não encontrado. Verifique se o arquivo .xlsx está na pasta correta.")
     
 # 2. Tratamento dos dados ------------------------------------------------------------------------------------------------------------------------------
 
