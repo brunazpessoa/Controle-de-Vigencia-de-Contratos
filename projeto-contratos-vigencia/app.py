@@ -70,7 +70,28 @@ fig.update_layout(xaxis_tickangle=0, yaxis_tickprefix="R$ ", yaxis_tickformat=",
 fig.update_traces(texttemplate='R$ %{text:,.2f}', textposition='auto', textfont=dict(size=14))
 st.plotly_chart(fig, use_container_width=True)
 
-# VISÃO 4 (continuação): Gráfico de pizza - Top 10 fornecedores por valor acumulado
+# --- VISÃO 4: Top 10 fornecedores com contratos ativos ---
+st.subheader("🏆 Top 10 fornecedores com contratos em andamento")
+
+# Filtro de contratos em andamento
+ativos = df[df['status_vigencia'] == 'Em andamento']
+
+# Top 10 por quantidade de contratos
+top_qtd = ativos['contratado'].value_counts().head(10)
+
+# Layout com colunas (barra à esquerda menor, pizza mais ampla)
+col1, _ = st.columns([1, 2])  # a segunda coluna não será usada
+
+with col1:
+    fig_qtd = px.bar(
+        top_qtd.sort_values(),
+        orientation='h',
+        title='📌 Por quantidade de contratos',
+        labels={'value': 'Quantidade', 'index': 'Fornecedor'}
+    )
+    st.plotly_chart(fig_qtd, use_container_width=True)
+
+# gráfico de pizza
 top_valor = ativos.groupby('contratado')['valor_global_acumulado'].sum().sort_values(ascending=False).head(10)
 top_valor_df = top_valor.reset_index()
 top_valor_df.columns = ['fornecedor', 'valor']
